@@ -32,7 +32,7 @@ class CLI {
         while (!exit) {
             print("Введите имя пользователя для входа: ")
             val userName = readln()
-            if(controller.logIn(userName)) {
+            if (controller.logIn(userName)) {
                 println("Вы вошли под пользователем ${controller.getCurrentUserName()}")
                 exit = true
             }
@@ -81,7 +81,7 @@ class CLI {
 
     private fun printActionLoop() {
         var choice = 0
-        while(choice !=5) {
+        while (choice != 5) {
             println("Выберите пункт меню:")
             println("1. Чтение")
             println("2. Запись")
@@ -89,7 +89,7 @@ class CLI {
             println("4. Просмотр своих доступов")
             println("5. Выход в главное меню")
             choice = readln().toInt()
-            when(choice) {
+            when (choice) {
                 1 -> printReadAction()
                 2 -> printWriteAction()
                 3 -> printGrantAction()
@@ -100,7 +100,7 @@ class CLI {
 
     private fun printExit(): Boolean {
         var choice = 0
-        while(choice != 1 && choice != 2) {
+        while (choice != 1 && choice != 2) {
             println("Выйти из программы?")
             println("1. Да")
             println("2. Нет")
@@ -113,7 +113,7 @@ class CLI {
         printWelcome()
         printGeneration()
         var exit = false
-        while(!exit) {
+        while (!exit) {
             printAllAccesses()
             printLoginLoop()
             printActionLoop()

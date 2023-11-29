@@ -15,7 +15,7 @@ class AccessTableController {
     fun getUserAccesses(user: User? = currentUser): String {
         var result = ""
         val propertySet = service.getProperties()
-        if(user!=null) {
+        if (user != null) {
             result += ("${user.name}: ${user.type.stringValue}\n")
             for (property in propertySet) {
                 result += ("${property.name}: ")
@@ -51,25 +51,29 @@ class AccessTableController {
         return currentUser?.name.orEmpty()
     }
 
-    fun performAction(propertyName: String, action: AccessType, recipientName: String? = null, recipientAction: AccessType? = null): Boolean? {
+    fun performAction(
+        propertyName: String,
+        action: AccessType,
+        recipientName: String? = null,
+        recipientAction: AccessType? = null
+    ): Boolean? {
         val property = service.findProperty(propertyName)
         val user = currentUser
         val accessResult: Boolean
 
-        if(user != null && property != null)
+        if (user != null && property != null)
             accessResult = service.requestAccess(user, property, action)
         else
             return null
 
-        if(!accessResult)
+        if (!accessResult)
             return false
 
-        if(action == AccessType.Grant && recipientName != null && recipientAction != null) {
-            if(service.requestAccess(user, property, recipientAction)) {
+        if (action == AccessType.Grant && recipientName != null && recipientAction != null) {
+            if (service.requestAccess(user, property, recipientAction)) {
                 val recipient = service.findUser(recipientName) ?: return null
                 service.grantAccess(recipient, property, recipientAction)
-            }
-            else
+            } else
                 return false
         }
         return true

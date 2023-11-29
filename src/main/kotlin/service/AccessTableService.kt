@@ -1,20 +1,22 @@
 package service
 
-import model.*
+import model.AccessType
+import model.Property
+import model.User
+import model.UserType
 import repository.AccessTableRepository
 
 class AccessTableService {
     private val repository = AccessTableRepository()
 
     fun grantAccess(user: User, property: Property, accessType: AccessType) {
-        if(repository.accessMap[Pair(user, property)] == null) {
+        if (repository.accessMap[Pair(user, property)] == null) {
             repository.accessMap[Pair(user, property)] = HashSet()
         }
-        if(accessType == AccessType.FullAccess) {
+        if (accessType == AccessType.FullAccess) {
             repository.accessMap[Pair(user, property)]?.clear()
             repository.accessMap[Pair(user, property)]?.add(accessType)
-        }
-        else if(repository.accessMap[Pair(user, property)]?.contains(AccessType.FullAccess) == false)
+        } else if (repository.accessMap[Pair(user, property)]?.contains(AccessType.FullAccess) == false)
             repository.accessMap[Pair(user, property)]?.add(accessType)
     }
 
@@ -34,11 +36,11 @@ class AccessTableService {
     }
 
     fun findUser(named: String): User? {
-        return repository.userSet.find { it.name==named }
+        return repository.userSet.find { it.name == named }
     }
 
     fun findProperty(named: String): Property? {
-        return repository.propertySet.find { it.name==named }
+        return repository.propertySet.find { it.name == named }
     }
 
     fun getUsers(): HashSet<User> {
@@ -62,29 +64,29 @@ class AccessTableService {
     }
 
     private fun fillRandomUsers(count: Int) {
-        if(count > 0)
+        if (count > 0)
             insertUser((User("Администратор", UserType.Administrator)))
-        if(count > 1)
+        if (count > 1)
             insertUser((User("Гость", UserType.Guest)))
-        if(count > 2)
-            for(i in 0 until count-2) {
-                insertUser((User("Пользователь ${i+1}", UserType.User)))
+        if (count > 2)
+            for (i in 0 until count - 2) {
+                insertUser((User("Пользователь ${i + 1}", UserType.User)))
             }
     }
 
     private fun fillRandomProperties(count: Int) {
-        for(i in 0 until count) {
-            insertProperty((Property("Сущность ${i+1}")))
+        for (i in 0 until count) {
+            insertProperty((Property("Сущность ${i + 1}")))
         }
     }
 
     private fun grantRandomAccess() {
         for (user in repository.userSet)
             for (property in repository.propertySet) {
-                if(user.type == UserType.Administrator)
+                if (user.type == UserType.Administrator)
                     grantAccess(user, property, AccessType.FullAccess)
                 else
-                    for(i in 0..(0..2).random())
+                    for (i in 0..(0..2).random())
                         grantAccess(user, property, AccessType.values().random())
             }
     }
