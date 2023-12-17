@@ -69,7 +69,7 @@ class CLI {
             "Полный доступ" -> AccessType.FullAccess
             "Выдача доступа" -> AccessType.Grant
             "Чтение" -> AccessType.Read
-            "Запись" -> AccessType.Read
+            "Запись" -> AccessType.Write
             else -> null
         }
         when (controller.performAction(propertyName, AccessType.Grant, recipientName, recipientAction)) {
