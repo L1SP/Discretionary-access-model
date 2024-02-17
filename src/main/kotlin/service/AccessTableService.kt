@@ -4,12 +4,10 @@ import model.AccessType
 import model.Property
 import model.User
 import model.UserType
-import repository.AccessTableRepository
+import repository.IAccessTableRepository
 
-class AccessTableService {
-    private val repository = AccessTableRepository()
-
-    fun grantAccess(user: User, property: Property, accessType: AccessType) {
+class AccessTableService(private val repository: IAccessTableRepository): IAccessTableService {
+    override fun grantAccess(user: User, property: Property, accessType: AccessType) {
         if (repository.accessMap[Pair(user, property)] == null) {
             repository.accessMap[Pair(user, property)] = HashSet()
         }
@@ -20,13 +18,13 @@ class AccessTableService {
             repository.accessMap[Pair(user, property)]?.add(accessType)
     }
 
-    fun requestAccess(user: User, property: Property, accessType: AccessType): Boolean {
+    override fun requestAccess(user: User, property: Property, accessType: AccessType): Boolean {
         val element = repository.accessMap[Pair(user, property)]
         return element?.contains(AccessType.FullAccess) == true
                 || element?.contains(accessType) == true
     }
 
-    fun generateRandomTable(userCount: Int, propertyCount: Int) {
+    override fun generateRandomTable(userCount: Int, propertyCount: Int) {
         repository.accessMap.clear()
         repository.userSet.clear()
         repository.propertySet.clear()
@@ -35,23 +33,23 @@ class AccessTableService {
         grantRandomAccess()
     }
 
-    fun findUser(named: String): User? {
+    override fun findUser(named: String): User? {
         return repository.userSet.find { it.name == named }
     }
 
-    fun findProperty(named: String): Property? {
+    override fun findProperty(named: String): Property? {
         return repository.propertySet.find { it.name == named }
     }
 
-    fun getUsers(): HashSet<User> {
+    override fun getUsers(): HashSet<User> {
         return repository.userSet
     }
 
-    fun getProperties(): HashSet<Property> {
+    override fun getProperties(): HashSet<Property> {
         return repository.propertySet
     }
 
-    fun getAccessForProperty(user: User, property: Property): HashSet<AccessType>? {
+    override fun getAccessForProperty(user: User, property: Property): HashSet<AccessType>? {
         return repository.accessMap[Pair(user, property)]
     }
 

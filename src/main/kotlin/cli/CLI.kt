@@ -1,10 +1,10 @@
 package cli
 
 import controller.AccessTableController
+import controller.IAccessTableController
 import model.AccessType
 
-class CLI {
-    private val controller = AccessTableController()
+class CLI(private val controller: IAccessTableController): ICLI {
 
     private fun printWelcome() {
         print("Это лабораторная по дискретиционной модели безопасности\n")
@@ -109,7 +109,7 @@ class CLI {
         return choice == 1
     }
 
-    fun run() {
+    override fun run() {
         printWelcome()
         printGeneration()
         var exit = false

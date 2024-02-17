@@ -3,16 +3,16 @@ package controller
 import model.AccessType
 import model.User
 import service.AccessTableService
+import service.IAccessTableService
 
-class AccessTableController {
-    private val service = AccessTableService()
-    private var currentUser: User? = null
+class AccessTableController(private val service: IAccessTableService): IAccessTableController {
+    override var currentUser: User? = null
 
-    fun createTable(userCount: Int, propertyCount: Int) {
+    override fun createTable(userCount: Int, propertyCount: Int) {
         service.generateRandomTable(userCount, propertyCount)
     }
 
-    fun getUserAccesses(user: User? = currentUser): String {
+    override fun getUserAccesses(user: User?): String {
         var result = ""
         val propertySet = service.getProperties()
         if (user != null) {
@@ -34,7 +34,7 @@ class AccessTableController {
         return result + '\n'
     }
 
-    fun getTable(): String {
+    override fun getTable(): String {
         var result = ""
         val userSet = service.getUsers()
         for (user in userSet)
@@ -42,20 +42,20 @@ class AccessTableController {
         return result
     }
 
-    fun logIn(userName: String): Boolean {
+    override fun logIn(userName: String): Boolean {
         currentUser = service.findUser(userName)
         return currentUser != null
     }
 
-    fun getCurrentUserName(): String {
+    override fun getCurrentUserName(): String {
         return currentUser?.name.orEmpty()
     }
 
-    fun performAction(
+    override fun performAction(
         propertyName: String,
         action: AccessType,
-        recipientName: String? = null,
-        recipientAction: AccessType? = null
+        recipientName: String?,
+        recipientAction: AccessType?
     ): Boolean? {
         val property = service.findProperty(propertyName)
         val user = currentUser
